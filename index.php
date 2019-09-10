@@ -1,27 +1,44 @@
 <?php
 
-    $newSession = session_start();
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
-    if ($newSession) {
-        echo 'Started session';
-    } else {
-        echo 'failed';
+    session_start();
+
+    if(!isset($_SESSION["usedLetters"])) {
+        $_SESSION["usedLetters"] = array();
     }
+ 
+    $used = "";
+    $error = "";
 
-    $_SESSION["usedLetters"] = array();
-
-    $letterInput = $_GET[letter];
-
-    // $usedLetters = array();
-
-    if($letterInput) {
-        array_push($_SESSION["usedLetters"], $letterInput);
+    if(isset($_GET["letter"])) {
+        $input = $_GET["letter"];
+        $input = strtolower($input);
+        $input = trim($input);
+        if (!ctype_alpha($input) || strlen($input) > 1){
+           $error = "Must be one letter!";
+        } else {
+          array_push($_SESSION["usedLetters"], $input);
+          foreach($_SESSION["usedLetters"] as $letter) {
+             $used .= $letter . " ";
+          }
+        }
     };
 
-    print_r($_SESSION["usedLetters"]);
 
-    echo "<form method='GET'>
+    //print_r($_SESSION["usedLetters"]);
+
+    echo "
+       <form method='GET'>
         <label>Pick a letter:
             <input type='text' name='letter'></label>
         <input type='submit' value='send'>
-    </form>";
+        </form>
+        <div>
+        <p>$error</p>
+        <p>Guessed letters: $used </p>
+        </div>";
+
+    

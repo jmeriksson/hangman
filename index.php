@@ -1,44 +1,35 @@
 <?php
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
+
+    require_once "Hangman.php";
 
     session_start();
-
-    if(!isset($_SESSION["usedLetters"])) {
-        $_SESSION["usedLetters"] = array();
-    }
- 
-    $used = "";
-    $error = "";
-
-    if(isset($_GET["letter"])) {
-        $input = $_GET["letter"];
-        $input = strtolower($input);
-        $input = trim($input);
-        if (!ctype_alpha($input) || strlen($input) > 1){
-           $error = "Must be one letter!";
-        } else {
-          array_push($_SESSION["usedLetters"], $input);
-          foreach($_SESSION["usedLetters"] as $letter) {
-             $used .= $letter . " ";
-          }
-        }
-    };
+    
+    $game = new Hangman();
+    //$game->resetArray();
+    $game->loadUsedLetters();
+    $game->queryLetter();
+    $game->getView();
+    $game->getSecretWord(); //Testing, not working?
 
 
     //print_r($_SESSION["usedLetters"]);
 
-    echo "
-       <form method='GET'>
-        <label>Pick a letter:
-            <input type='text' name='letter'></label>
-        <input type='submit' value='send'>
-        </form>
-        <div>
-        <p>$error</p>
-        <p>Guessed letters: $used </p>
-        </div>";
 
+    /*
+    Vi har lärt oss något om PHP.
+
+    Om vi ska vara pekiga:
+     - namnggivning: used - used vad?
+                    error - error vad?
+                    letter - letter vad? ~guessedLetter
+    - structur:     mera mellanrum
+                    göra funktioner för lättare läsbarhet
+                    klasser
+                    HTML till funktion - View liknande till labb
+    - TODO? Vad är det vi ska göra/lägga till
     
+    */
